@@ -217,6 +217,7 @@ const components = [
 const $ = (id) => document.getElementById(id);
 const state = { name: '', index: 0, answers: [], matched: false, selected: false, signedAt: null };
 const screens = ['welcome', 'mission', 'review', 'result'];
+const supabaseClient = window.supabase?.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
 function unitOf(component) {
   return component.unit || 'buah';
 }
@@ -240,6 +241,29 @@ function nextUnansweredIndex() {
 function quantityDifference(component, actual) {
   const diff = Math.abs(component.qty - actual);
   return `${actual < component.qty ? 'kurang' : 'lebih'} ${formatQuantity(diff, component)}`;
+}
+async function saveSubmission() {
+  if (!supabaseClient) throw new Error('Koneksi database belum siap.');
+  const answers = components.map(answerFor).filter(Boolean);
+  const missingComponents = answers
+    .filter((answer) => answer.actual !== answer.qty)
+    .map((answer) => {
+      const component = components.find((item) => item.id === answer.id);
+      return {
+        id: answer.id,
+        name: answer.name,
+        expected: formatQuantity(answer.qty, component),
+        found: formatQuantity(answer.actual, component),
+      };
+    });
+  const { error } = await supabaseClient.from('starterkit_submissions').insert({
+    student_name: state.name,
+    all_complete: isComplete(),
+    total_components: components.length,
+    missing_components: missingComponents,
+    answers,
+  });
+  if (error) throw error;
 }
 function renderKitList() {
   const totals = components.reduce((acc, component) => {
@@ -505,13 +529,27 @@ $('nextMissionButton').addEventListener('click', () => {
   loadMission();
 });
 $('declaration').addEventListener('change', () => { $('finishButton').disabled = !$('declaration').checked; });
-$('finishButton').addEventListener('click', () => {
+$('finishButton').addEventListener('click', async () => {
   if (!$('declaration').checked || state.answers.length !== components.length) return;
+  $('finishButton').disabled = true;
+  $('finishButton').textContent = 'Menyimpan hasil…';
   state.signedAt = new Date();
+  let saved = false;
+  try {
+    await saveSubmission();
+    saved = true;
+  } catch (error) {
+    console.error('Gagal menyimpan pemeriksaan ke Supabase:', error);
+  }
   showScreen('result');
   $('resultTitle').textContent = isComplete() ? 'Starter kit saya lengkap!' : 'Kit sudah diperiksa, ada jumlah yang berbeda.';
   $('resultStatement').textContent = $('declarationText').textContent;
   $('resultDate').textContent = `Penanggung jawab: ${state.name} · ${state.signedAt.toLocaleString('id-ID')}`;
+  $('supabaseStatus').textContent = saved
+    ? 'Hasil sudah tersimpan di database.'
+    : 'Hasil belum masuk database. Unduh catatan ini dan coba lagi nanti.';
+  $('supabaseStatus').className = saved ? 'feedback success' : 'feedback error';
+  $('finishButton').textContent = 'Setuju & selesai';
   $('resultTitle').focus();
 });
 $('downloadButton').addEventListener('click', () => {

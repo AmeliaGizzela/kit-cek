@@ -58,7 +58,8 @@
     </section>
     <section id="result" class="mission-panel" hidden aria-labelledby="resultTitle">
       <p class="eyebrow">Pemeriksaan ditandatangani</p><h2 id="resultTitle" tabindex="-1"></h2><p id="resultStatement" class="clue"></p><p id="resultDate"></p>
-      <p>Hasil tersimpan selama halaman ini terbuka. Unduh catatan untuk menyimpannya atau menyerahkannya kepada guru.</p>
+      <p id="supabaseStatus" class="feedback" role="status" aria-live="polite"></p>
+      <p>Hasil pemeriksaan tersimpan di database. Unduh catatan jika ingin menyerahkannya kepada guru.</p>
       <button id="downloadButton" class="primary-button" type="button">Unduh hasil pemeriksaan</button><button id="newStudentButton" class="ghost-button" type="button">Siswa berikutnya</button>
     </section>
     <details id="kitList" class="kit-list" open>
@@ -68,6 +69,9 @@
     </details>
     <p class="footer-note">Daftar 23 komponen mengikuti daftar starter kit kelas. Foto referensi dapat berbeda warna atau bentuk kemasan dari kitmu. Cocokkan juga tipe dan konektornya.</p>
   </main>
+  <style>.feedback.success{color:#187246;font-weight:700}.feedback.error{color:#a33d30;font-weight:700}</style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="supabase-config.js" defer></script>
   <script src="app.js" defer></script>
 </body>
 </html>
