@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Misi Starter Kit Robotik</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div><p class="eyebrow">Lab robotik · Pemeriksaan starter kit</p><h1>Misi kenali kitmu.</h1><p class="intro">Kenali komponennya. Hitung isinya. Jadilah penanggung jawab kitmu.</p></div>
+    <div id="identity" class="score-card" hidden><span id="ownerText"></span><p id="scoreText"></p><div class="score-bar"><span id="scoreBar"></span></div></div>
+  </header>
+  <main>
+    <section id="welcome" class="mission-panel" aria-labelledby="welcomeTitle">
+      <p class="eyebrow">Sebelum memulai</p><h2 id="welcomeTitle">Siapa penanggung jawab kit ini?</h2>
+      <p>Tulis namamu. Siapkan kotak robotmu. Yuk, kenali dan hitung 23 jenis benda!</p>
+      <form id="studentForm">
+        <label for="studentName">Namamu</label>
+        <input id="studentName" name="studentName" autocomplete="name" maxlength="80" required placeholder="Tulis nama lengkapmu" />
+        <p id="nameError" class="feedback" role="alert"></p>
+        <button class="primary-button" type="submit">Mulai misi →</button>
+      </form>
+      <ol class="journey"><li>Baca fungsi</li><li>Kenali nama</li><li>Cocokkan gambar</li><li>Periksa jumlah</li></ol>
+    </section>
+    <section id="mission" class="mission-panel" hidden aria-labelledby="missionTitle">
+      <div class="mission-top">
+        <p id="missionNumber" class="eyebrow"></p>
+        <div class="mission-actions">
+          <button id="previousMissionButton" class="ghost-button" type="button">← Sebelumnya</button>
+          <button id="nextMissionButton" class="ghost-button" type="button">Sesudahnya →</button>
+          <button id="restartButton" class="ghost-button" type="button">Mulai ulang</button>
+        </div>
+      </div>
+      <ol class="journey" id="steps"><li>Baca fungsi</li><li>Kenali nama</li><li>Cocokkan gambar</li><li>Periksa jumlah</li></ol>
+      <h2 id="missionTitle" tabindex="-1"></h2><p id="clue" class="clue"></p>
+      <button id="revealButton" class="primary-button" type="button">Kenali namanya →</button>
+      <section id="matching" hidden>
+        <p>Seret nama ini ke gambar yang cocok. Di HP, ketuk nama lalu ketuk gambar.</p>
+        <button id="nameToken" class="label-chip" type="button" draggable="true"></button>
+        <div id="choices" class="component-grid" aria-label="Pilihan gambar komponen"></div>
+        <p id="matchFeedback" class="feedback" role="status" aria-live="polite"></p>
+      </section>
+      <section id="inventory" class="inventory" hidden aria-labelledby="inventoryTitle">
+        <p class="eyebrow">Periksa kit fisikmu</p><h3 id="inventoryTitle">Hitung jumlah yang kamu temukan</h3>
+        <p id="expectedQuantity"></p>
+        <label for="actualQuantity">Jumlah di kitmu</label><input id="actualQuantity" type="number" min="0" max="999" step="1" inputmode="numeric" placeholder="0" />
+        <p id="quantityFeedback" class="feedback" role="status"></p>
+        <label class="check-label"><input id="quantityConfirmed" type="checkbox" /> <span id="quantityConfirmationText">Saya sudah menghitung komponen ini.</span></label>
+        <button id="nextButton" class="primary-button" type="button" disabled>Simpan & lanjut →</button>
+      </section>
+    </section>
+    <section id="review" class="mission-panel" hidden aria-labelledby="reviewTitle">
+      <p class="eyebrow">Misi pengenalan selesai</p><h2 id="reviewTitle" tabindex="-1">Hasil pemeriksaan kitmu</h2>
+      <p id="reviewSummary"></p><div class="table-wrap"><table><thead><tr><th>Komponen</th><th>Target</th><th>Ditemukan</th><th>Status</th></tr></thead><tbody id="reviewRows"></tbody></table></div>
+      <label class="check-label"><input id="declaration" type="checkbox" /><span id="declarationText"></span></label>
+      <button id="finishButton" class="primary-button" type="button" disabled>Setuju & selesai</button>
+    </section>
+    <section id="result" class="mission-panel" hidden aria-labelledby="resultTitle">
+      <p class="eyebrow">Pemeriksaan ditandatangani</p><h2 id="resultTitle" tabindex="-1"></h2><p id="resultStatement" class="clue"></p><p id="resultDate"></p>
+      <p>Hasil tersimpan selama halaman ini terbuka. Unduh catatan untuk menyimpannya atau menyerahkannya kepada guru.</p>
+      <button id="downloadButton" class="primary-button" type="button">Unduh hasil pemeriksaan</button><button id="newStudentButton" class="ghost-button" type="button">Siswa berikutnya</button>
+    </section>
+    <details id="kitList" class="kit-list" open>
+      <summary>Daftar lengkap isi starter kit <span id="kitTotals"></span></summary>
+      <p>Ada 23 jenis benda. Yuk, kenali dan hitung semuanya!</p>
+      <div class="table-wrap"><table aria-label="Daftar lengkap starter kit"><thead><tr><th>No.</th><th>Komponen</th><th>Jumlah per kit</th><th>Status pemeriksaan</th></tr></thead><tbody id="kitRows"></tbody></table></div>
+    </details>
+    <p class="footer-note">Daftar 23 komponen mengikuti daftar starter kit kelas. Foto referensi dapat berbeda warna atau bentuk kemasan dari kitmu. Cocokkan juga tipe dan konektornya.</p>
+  </main>
+  <script src="app.js" defer></script>
+</body>
+</html>
